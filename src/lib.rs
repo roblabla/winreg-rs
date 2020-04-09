@@ -247,6 +247,21 @@ impl RegKey {
         RegKey { hkey }
     }
 
+    pub fn load_app_key<N: AsRef<OsStr>>(name: N, lock: bool) -> io::Result<RegKey> {
+        RegKey::load_app_key_with_flags(name, lock, enums::KEY_READ)
+    }
+
+    pub fn load_app_key_with_flags<N: AsRef<OsStr>>(name: N, lock: bool, perms: winapi_reg::REGSAM) -> io::Result<RegKey> {
+        let c_name = to_utf16(name);
+        let mut new_hkey: HKEY = ptr::null_mut();
+        match unsafe {
+            winapi_reg::RegLoadAppKeyW(c_name.as_ptr(), &mut new_hkey, perms, if lock { winapi_reg::REG_PROCESS_APPKEY } else { 0 }, 0) as DWORD
+        } {
+            0 => Ok(RegKey { hkey: new_hkey }),
+            err => werr!(err),
+        }
+    }
+
     /// Return inner winapi HKEY of a key:
     ///
     /// # Examples
