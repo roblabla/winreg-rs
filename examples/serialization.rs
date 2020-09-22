@@ -46,7 +46,7 @@ struct Test {
     t_isize: isize,
     t_f64: f64,
     t_f32: f32,
-    // t_char: char,
+    t_char: char,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -78,7 +78,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         t_isize: -1_234_567_890,
         t_f64: -0.01,
         t_f32: 3.15,
-        // t_char: 'a',
+        t_char: 'a',
     };
 
     key.encode(&v1)?;
